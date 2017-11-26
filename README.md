@@ -1,6 +1,6 @@
 # README #
 
-This project is devoted to the simalation of the steady and unsteady flows of a viscous incompressible fluid.
+This project is devoted to the simulation of the steady and unsteady flows of a viscous incompressible fluid.
 
 ### What is this repository for? ###
 
