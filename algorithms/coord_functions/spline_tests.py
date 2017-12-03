@@ -17,15 +17,15 @@ class TestSpline(unittest.TestCase):
 
     def test_d1Bspline3(self):
         spline = Spline(6, 15, 0.5, 0.5)
-        self.assertEquals(spline.d1Bspline3(0), 0)
-        self.assertEquals(round(spline.d1Bspline3(1), 10), round(-5 / 12, 10))
-        self.assertEquals(spline.d1Bspline3(3), 0)
+        self.assertEquals(spline.d1_spline(0), 0)
+        self.assertEquals(round(spline.d1_spline(1), 10), round(-5 / 12, 10))
+        self.assertEquals(spline.d1_spline(3), 0)
 
     def test_d2Bspline3(self):
         spline = Spline(6, 15, 0.5, 0.5)
-        self.assertEquals(spline.d2Bspline3(0), -1)
-        self.assertEquals(round(spline.d2Bspline3(1), 10), round(1 / 3, 10))
-        self.assertEquals(spline.d2Bspline3(3), 0)
+        self.assertEquals(spline.d2_spline(0), -1)
+        self.assertEquals(round(spline.d2_spline(1), 10), round(1 / 3, 10))
+        self.assertEquals(spline.d2_spline(3), 0)
 
     def test_spline(self):
         spline = Spline(6, 15, 0.5, 0.5)

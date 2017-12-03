@@ -1,4 +1,5 @@
 from sympy import *
+import sys
 import numpy as np
 
 
@@ -9,10 +10,10 @@ class Spline:
 
     def __init__(self, spline_base, coord_number, a, b):
         """
-        :param spline_base:
-        :param coord_number:
-        :param a:
-        :param b:
+        :param spline_base: order of the spline
+        :param coord_number: number of coordinate functions
+        :param a: a-coordinate
+        :param b: b-coordinate
         """
 
         k = 1
@@ -33,40 +34,103 @@ class Spline:
 
     @staticmethod
     def unit_step(x):
-        if x == 0:
-            return np.sign(x) + 1
+        """
+        represents the unit step function
+        :param x: x-coordinate
+        :return: represents the unit step function, equal to 0 for x<0 and 1 for x>=0.
+        """
+        if abs(x) < sys.float_info.epsilon:
+            return np.sign(x) + 1.0
 
-        return 0.5 * (np.sign(x) + 1)
+        return 0.5 * (np.sign(x) + 1.0)
 
     def spline_base(self, x):
+        """
+        spline of 6 order
+        :param x: x-coordinate
+        :return: spline of 6 order real value
+        """
         return (11 / 20 - x ** 2 / 2 + x ** 4 / 4 - x ** 5 / 12) * (self.unit_step(x) - self.unit_step(x - 1)) + \
                (17 / 40 + (5 * x) / 8 - (7 * x ** 2) / 4 + (5 * x ** 3) / 4 - (3 * x ** 4) / 8 + x ** 5 / 24) * (
                    self.unit_step(x - 1) - self.unit_step(x - 2)) + \
                (243 / 120 - (81 * x) / 24 + (9 * x ** 2) / 4 - (3 * x ** 3) / 4 + x ** 4 / 8 - x ** 5 / 120) * (
                    self.unit_step(x - 2) - self.unit_step(x - 3))
 
-    def d1Bspline3(self, value):
-        return value
+    def d1_spline(self, value):
+        """
+        first derivative of spline 6 order
+        :param value: x-coordinate
+        :return: first derivative of spline 6 order real value
+        """
+        return (-value + value ** 3 - (5 * value ** 4) / 12) * (self.unit_step(value) - self.unit_step(value - 1)) + \
+               (5 / 8 - (7 * value) / 2 + (15 * value ** 2) / 4 - (3 * value ** 3) / 2 + (5 * value ** 4) / 24) * (
+                   self.unit_step(value - 1) - self.unit_step(value - 2)) + \
+               (-27 / 8 + (9 * value) / 2 - (9 * value ** 2) / 4 + value ** 3 / 2 - value ** 4 / 24) * (
+                   self.unit_step(value - 2) - self.unit_step(value - 3))
 
-    def d2Bspline3(self, value):
-        return value
+    def d2_spline(self, value):
+        """
+        second derivative of spline 6 order
+        :param value: x-coordinate
+        :return: second derivative of spline 6 order real value
+        """
+        return (-1 + 3 * value ** 2 - (5 * value ** 3) / 3) * (self.unit_step(value) - self.unit_step(value - 1)) + \
+               (-7 / 2 + (15 * value) / 2 - (9 * value ** 2) / 2 + (5 * value ** 3) / 6) * (
+                   self.unit_step(value - 1) - self.unit_step(value - 2)) + \
+               (9 / 2 - (9 * value) / 2 + (3 * value ** 2) / 2 - value ** 3 / 6) * (
+                   self.unit_step(value - 2) - self.unit_step(value - 3))
 
     def spline(self, k, x, y):
+        """
+        coordinate function
+        :param k: natural number [1,225]
+        :param x: x-coordinate
+        :param y: y-coordinate
+        :return: coordinate function real value
+        """
         return self.spline_base(abs(x / self.spHx - self.kx[k])) * self.spline_base(abs(y / self.spHy - self.ky[k]))
 
     def d1x(self, k, x, y):
-        return np.sign(x / self.spHx - self.kx[k]) / self.spHx * self.d1Bspline3(
+        """
+        first derivative of coordinate function with respect to x
+        :param k:natural number [1,225]
+        :param x: x-coordinate
+        :param y: y-coordinate
+        :return: first derivative of coordinate function with respect to x real value
+        """
+        return np.sign(x / self.spHx - self.kx[k]) / self.spHx * self.d1_spline(
             abs(x / self.spHx - self.kx[k])) * self.spline_base(abs(y / self.spHy - self.ky[k]))
 
     def d1y(self, k, x, y):
+        """
+        first derivative of coordinate function with respect to y
+        :param k: natural number [1,225]
+        :param x: x-coordinate
+        :param y: y-coordinate
+        :return: first derivative of coordinate function with respect to y real value
+        """
         return np.sign(y / self.spHy - self.ky[k]) / self.spHy * self.spline_base(
-            abs(x / self.spHx - self.kx[k])) * self.d1Bspline3(
+            abs(x / self.spHx - self.kx[k])) * self.d1_spline(
             abs(y / self.spHy - self.ky[k]))
 
     def d2x(self, k, x, y):
-        return 1 / self.spHx ** 2 * self.d2Bspline3(abs(x / self.spHx - self.kx[k])) * self.spline_base(
+        """
+        second derivative of coordinate function with respect to x
+        :param k: natural number [1,225]
+        :param x: x-coordinate
+        :param y: y-coordinate
+        :return: second derivative of coordinate function with respect to x real value
+        """
+        return 1 / self.spHx ** 2 * self.d2_spline(abs(x / self.spHx - self.kx[k])) * self.spline_base(
             abs(y / self.spHy - self.ky[k]))
 
     def d2y(self, k, x, y):
-        return 1 / self.spHy ** 2 * self.spline_base(abs(x / self.spHx - self.kx[k])) * self.d2Bspline3(
+        """
+        second derivative of coordinate function with respect to y
+        :param k: natural number [1,225]
+        :param x: x-coordinate
+        :param y: y-coordinate
+        :return: second derivative of coordinate function with respect to y real value
+        """
+        return 1 / self.spHy ** 2 * self.spline_base(abs(x / self.spHx - self.kx[k])) * self.d2_spline(
             abs(y / self.spHy - self.ky[k]))
