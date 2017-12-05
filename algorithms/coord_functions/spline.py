@@ -1,4 +1,3 @@
-from sympy import *
 import sys
 import numpy as np
 
@@ -39,10 +38,10 @@ class Spline:
         :param x: x-coordinate
         :return: represents the unit step function, equal to 0 for x<0 and 1 for x>=0.
         """
-        if abs(x) < sys.float_info.epsilon:
-            return np.sign(x) + 1.0
+        if x < 0:
+            return 0
 
-        return 0.5 * (np.sign(x) + 1.0)
+        return 1
 
     def spline_base(self, x):
         """
@@ -56,34 +55,34 @@ class Spline:
                (243 / 120 - (81 * x) / 24 + (9 * x ** 2) / 4 - (3 * x ** 3) / 4 + x ** 4 / 8 - x ** 5 / 120) * (
                    self.unit_step(x - 2) - self.unit_step(x - 3))
 
-    def d1_spline(self, value):
+    def d1_spline(self, x):
         """
         first derivative of spline 6 order
-        :param value: x-coordinate
+        :param x: x-coordinate
         :return: first derivative of spline 6 order real value
         """
-        return (-value + value ** 3 - (5 * value ** 4) / 12) * (self.unit_step(value) - self.unit_step(value - 1)) + \
-               (5 / 8 - (7 * value) / 2 + (15 * value ** 2) / 4 - (3 * value ** 3) / 2 + (5 * value ** 4) / 24) * (
-                   self.unit_step(value - 1) - self.unit_step(value - 2)) + \
-               (-27 / 8 + (9 * value) / 2 - (9 * value ** 2) / 4 + value ** 3 / 2 - value ** 4 / 24) * (
-                   self.unit_step(value - 2) - self.unit_step(value - 3))
+        return (-x + x ** 3 - (5 * x ** 4) / 12) * (self.unit_step(x) - self.unit_step(x - 1)) + \
+               (5 / 8 - (7 * x) / 2 + (15 * x ** 2) / 4 - (3 * x ** 3) / 2 + (5 * x ** 4) / 24) * (
+                   self.unit_step(x - 1) - self.unit_step(x - 2)) + \
+               (-27 / 8 + (9 * x) / 2 - (9 * x ** 2) / 4 + x ** 3 / 2 - x ** 4 / 24) * (
+                   self.unit_step(x - 2) - self.unit_step(x - 3))
 
-    def d2_spline(self, value):
+    def d2_spline(self, x):
         """
         second derivative of spline 6 order
-        :param value: x-coordinate
+        :param x: x-coordinate
         :return: second derivative of spline 6 order real value
         """
-        return (-1 + 3 * value ** 2 - (5 * value ** 3) / 3) * (self.unit_step(value) - self.unit_step(value - 1)) + \
-               (-7 / 2 + (15 * value) / 2 - (9 * value ** 2) / 2 + (5 * value ** 3) / 6) * (
-                   self.unit_step(value - 1) - self.unit_step(value - 2)) + \
-               (9 / 2 - (9 * value) / 2 + (3 * value ** 2) / 2 - value ** 3 / 6) * (
-                   self.unit_step(value - 2) - self.unit_step(value - 3))
+        return (-1 + 3 * x ** 2 - (5 * x ** 3) / 3) * (self.unit_step(x) - self.unit_step(x - 1)) + \
+               (-7 / 2 + (15 * x) / 2 - (9 * x ** 2) / 2 + (5 * x ** 3) / 6) * (
+                   self.unit_step(x - 1) - self.unit_step(x - 2)) + \
+               (9 / 2 - (9 * x) / 2 + (3 * x ** 2) / 2 - x ** 3 / 6) * (
+                   self.unit_step(x - 2) - self.unit_step(x - 3))
 
     def spline(self, k, x, y):
         """
         coordinate function
-        :param k: natural number [1,225]
+        :param k: natural number [1,coord_number]
         :param x: x-coordinate
         :param y: y-coordinate
         :return: coordinate function real value
@@ -93,7 +92,7 @@ class Spline:
     def d1x(self, k, x, y):
         """
         first derivative of coordinate function with respect to x
-        :param k:natural number [1,225]
+        :param k:natural number [1,coord_number]
         :param x: x-coordinate
         :param y: y-coordinate
         :return: first derivative of coordinate function with respect to x real value
@@ -104,7 +103,7 @@ class Spline:
     def d1y(self, k, x, y):
         """
         first derivative of coordinate function with respect to y
-        :param k: natural number [1,225]
+        :param k: natural number [1,coord_number]
         :param x: x-coordinate
         :param y: y-coordinate
         :return: first derivative of coordinate function with respect to y real value
@@ -116,7 +115,7 @@ class Spline:
     def d2x(self, k, x, y):
         """
         second derivative of coordinate function with respect to x
-        :param k: natural number [1,225]
+        :param k: natural number [1,coord_number]
         :param x: x-coordinate
         :param y: y-coordinate
         :return: second derivative of coordinate function with respect to x real value
@@ -127,7 +126,7 @@ class Spline:
     def d2y(self, k, x, y):
         """
         second derivative of coordinate function with respect to y
-        :param k: natural number [1,225]
+        :param k: natural number [1,coord_number]
         :param x: x-coordinate
         :param y: y-coordinate
         :return: second derivative of coordinate function with respect to y real value
