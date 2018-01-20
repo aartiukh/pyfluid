@@ -18,4 +18,4 @@ for t in test_modules:
         # else, just load all the test cases from the module.
         suite.addTest(unittest.defaultTestLoader.loadTestsFromName(t))
 
-unittest.TextTestRunner().run(suite)
+unittest.TextTestRunner(verbosity=2).run(suite)
