@@ -1,19 +1,19 @@
 # __author__ = 'artyukhanton@gmail.com'
 
 import unittest
-import math
+from sympy import *
 
 from algorithms.r_functions import logical_operations
 
 
 class TestLogicalOperations(unittest.TestCase):
     def test_conjunction(self):
-        self.assertEqual(logical_operations.conjunction(0, 1, 1), 2 - math.sqrt(2))
-        self.assertEqual(logical_operations.conjunction(0, 2, 1), 3 - math.sqrt(5))
+        self.assertEqual(logical_operations.conjunction(0, 1, 1), 2 - sqrt(2))
+        self.assertEqual(logical_operations.conjunction(0, 2, 1), 3 - sqrt(5))
 
     def test_disjunction(self):
-        self.assertEqual(logical_operations.disjunction(0, 1, 1), 2 + math.sqrt(2))
-        self.assertEqual(logical_operations.disjunction(0, 2, 1), 3 + math.sqrt(5))
+        self.assertEqual(logical_operations.disjunction(0, 1, 1), 2 + sqrt(2))
+        self.assertEqual(logical_operations.disjunction(0, 2, 1), 3 + sqrt(5))
 
     def test_property_second(self):
         self.assertEquals(logical_operations.conjunction(0, 2, 1), logical_operations.conjunction(0, 1, 2))
@@ -34,7 +34,6 @@ class TestLogicalOperations(unittest.TestCase):
     def test_property_sixth(self):
         self.assertEquals(logical_operations.disjunction(0, 1, 1) + logical_operations.conjunction(0, 1, 1), 4)
         self.assertEquals(logical_operations.disjunction(0, 2, 1) + logical_operations.conjunction(0, 2, 1), 6)
-
 
     def test_property_seventh(self):
         self.assertAlmostEqual(logical_operations.disjunction(0, 1, 1) * logical_operations.conjunction(0, 1, 1), 2)

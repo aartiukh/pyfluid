@@ -1,6 +1,9 @@
 # __author__ = 'artyukhanton@gmail.com'
 
 import math
+from sympy import *
+
+x, y = symbols('x y')
 
 
 def conjunction(alpha, x, y):
@@ -13,7 +16,7 @@ def conjunction(alpha, x, y):
     """
     assert -1 < alpha <= 1
 
-    return (x + y - math.sqrt(x * x + y * y - 2 * alpha * x * y)) / (1 + alpha)
+    return (x + y - sqrt(x * x + y * y - 2 * alpha * x * y)) / (1 + alpha)
 
 
 def disjunction(alpha, x, y):
@@ -26,4 +29,4 @@ def disjunction(alpha, x, y):
     """
     assert -1 < alpha <= 1
 
-    return (x + y + math.sqrt(x * x + y * y - 2 * alpha * x * y)) / (1 + alpha)
+    return (x + y + sqrt(x * x + y * y - 2 * alpha * x * y)) / (1 + alpha)

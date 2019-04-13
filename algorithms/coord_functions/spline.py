@@ -14,7 +14,6 @@ class Spline:
         :param b: b-coordinate
         """
 
-        k = 1
         self.kx = []
         self.ky = []
         i = -spline_base + 4
@@ -23,7 +22,6 @@ class Spline:
             while j <= coord_number - 1 - spline_base + 4:
                 self.ky.append(j)
                 self.kx.append(i)
-                k += 1
                 j += 1
             i += 1
             j = -spline_base + 4
@@ -86,7 +84,7 @@ class Spline:
         :param y: y-coordinate
         :return: coordinate function real value
         """
-        return self.spline_base(abs(x / self.spHx - self.kx[k])) * self.spline_base(abs(y / self.spHy - self.ky[k]))
+        return self.spline_base(abs(x / self.spHx - self.kx[k-1])) * self.spline_base(abs(y / self.spHy - self.ky[k-1]))
 
     def d1x(self, k, x, y):
         """
@@ -96,8 +94,8 @@ class Spline:
         :param y: y-coordinate
         :return: first derivative of coordinate function with respect to x real value
         """
-        return np.sign(x / self.spHx - self.kx[k]) / self.spHx * self.d1_spline(
-            abs(x / self.spHx - self.kx[k])) * self.spline_base(abs(y / self.spHy - self.ky[k]))
+        return np.sign(x / self.spHx - self.kx[k-1]) / self.spHx * self.d1_spline(
+            abs(x / self.spHx - self.kx[k-1])) * self.spline_base(abs(y / self.spHy - self.ky[k-1]))
 
     def d1y(self, k, x, y):
         """
@@ -107,9 +105,9 @@ class Spline:
         :param y: y-coordinate
         :return: first derivative of coordinate function with respect to y real value
         """
-        return np.sign(y / self.spHy - self.ky[k]) / self.spHy * self.spline_base(
-            abs(x / self.spHx - self.kx[k])) * self.d1_spline(
-            abs(y / self.spHy - self.ky[k]))
+        return np.sign(y / self.spHy - self.ky[k-1]) / self.spHy * self.spline_base(
+            abs(x / self.spHx - self.kx[k-1])) * self.d1_spline(
+            abs(y / self.spHy - self.ky[k-1]))
 
     def d2x(self, k, x, y):
         """
@@ -119,8 +117,8 @@ class Spline:
         :param y: y-coordinate
         :return: second derivative of coordinate function with respect to x real value
         """
-        return 1 / self.spHx ** 2 * self.d2_spline(abs(x / self.spHx - self.kx[k])) * self.spline_base(
-            abs(y / self.spHy - self.ky[k]))
+        return 1 / self.spHx ** 2 * self.d2_spline(abs(x / self.spHx - self.kx[k-1])) * self.spline_base(
+            abs(y / self.spHy - self.ky[k-1]))
 
     def d2y(self, k, x, y):
         """
@@ -130,5 +128,9 @@ class Spline:
         :param y: y-coordinate
         :return: second derivative of coordinate function with respect to y real value
         """
-        return 1 / self.spHy ** 2 * self.spline_base(abs(x / self.spHx - self.kx[k])) * self.d2_spline(
-            abs(y / self.spHy - self.ky[k]))
+        return 1 / self.spHy ** 2 * self.spline_base(abs(x / self.spHx - self.kx[k-1])) * self.d2_spline(
+            abs(y / self.spHy - self.ky[k-1]))
+
+    def is_outside(self, i, j):
+        return (self.kx[i] + 6 - self.kx[j] <= 0) or (self.ky[i] + 6 - self.ky[j] <= 0) or\
+               (self.kx[j] + 6 - self.kx[i] <= 0) or (self.ky[j] + 6 - self.ky[i] <= 0)
