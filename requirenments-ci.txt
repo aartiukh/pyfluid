@@ -1,0 +1,5 @@
+flake8==3.8.3
+numba==0.45.1
+numpy==1.17.2
+pyqt==5.9.2
+sympy==1.4
