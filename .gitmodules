@@ -1,0 +1,3 @@
+[submodule "algorithms/scikit-numerical"]
+	path = algorithms/scikit-numerical
+	url = git@github.com:Bellator95/scikit-numerical.git
