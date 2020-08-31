@@ -4,10 +4,6 @@ import unittest
 test_modules = [
     'coord_functions.spline_tests',
     'r_functions.logical_operations_tests',
-    'numerical_integration.integration_test',
-    'vectors_calculation.vectors_tests',
-    'matrix_calculation.matrix_tests',
-    'SDE.preparation_SDE_tests',
     ]
 
 suite = unittest.TestSuite()
